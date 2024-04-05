@@ -1,28 +1,26 @@
 #!/usr/bin/python3
+"""states models
 """
-Lists all states with a name starting with
-N (upper N) from the database hbtn_0e_0_usa
-"""
+if __name__ == "__main__":
+    import MySQLdb
+    import sys
 
-if __name__ == '__main__':
-    from sys import argv
-    import MySQLdb as mysql
+    db_host = "localhost"
+    db_user = sys.argv[1]  # "your_username"
+    db_password = sys.argv[2]  # "your_password"
+    db_name = sys.argv[3]  # "your_database_name"
+    port = 3306
 
-    try:
-        db = mysql.connect(host='localhost', port=3306, user=argv[1],
-                           passwd=argv[2], db=argv[3])
-    except Exception:
-        print('Failed to connect to the database')
-        exit(0)
-
+    db = MySQLdb.connect(
+        host=db_host, user=db_user, passwd=db_password, db=db_name, port=port
+    )
     cursor = db.cursor()
 
-    cursor.execute("SELECT * FROM states \
-                    WHERE name LIKE BINARY 'N%' ORDER BY id ASC;")
+    cursor.execute("SELECT * FROM states WHERE name \
+LIKE BINARY 'N%' ORDER BY id ASC")
+    rows = cursor.fetchall()
 
-    result_query = cursor.fetchall()
-
-    for row in result_query:
+    for row in rows:
         print(row)
 
     cursor.close()
